@@ -25,7 +25,7 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
        
         initializeMenu()
-        game = GameManager ()
+        game = GameManager (scene: self)
         initializeGameView()
         }
     
@@ -102,7 +102,7 @@ class GameScene: SKScene {
         }
         //3
         let bottomCorner = CGPoint(x: 0, y: (frame.size.height / -2) + 20)
-        bestScore.run(SKAction.move(to: bottomCorner, duration: 0.4))
+//        bestScore.run(SKAction.move(to: bottomCorner, duration: 0.4))
         
         bestScore.run(SKAction.move(to: bottomCorner, duration: 0.4)) {
             self.gameBG.setScale(0)
@@ -111,6 +111,7 @@ class GameScene: SKScene {
             self.currentScore.isHidden = false
             self.gameBG.run(SKAction.scale(to: 1, duration: 0.4))
             self.currentScore.run(SKAction.scale(to: 1, duration: 0.4))
+            self.game.initGame()
         }
     }
 
@@ -151,5 +152,6 @@ class GameScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        game.update(time: currentTime)
     }
 }
