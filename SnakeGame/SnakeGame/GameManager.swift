@@ -56,6 +56,13 @@ class GameManager {
             }
         }
     }
+    func swipe(ID: Int) {
+        if !(ID == 2 && playerDirection == 4) && !(ID == 4 && playerDirection == 2) {
+            if !(ID == 1 && playerDirection == 3) && !(ID == 3 && playerDirection == 1) {
+                playerDirection = ID
+            }
+        }
+    }
     
     private func updatePlayerPosition() {
         //4
