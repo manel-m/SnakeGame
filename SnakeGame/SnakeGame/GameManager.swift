@@ -15,28 +15,45 @@ class GameManager {
     var nextTime: Double?
     var timeExtension: Double = 0.15
     var playerDirection: Int = 4
+    var currentScore: Int = 0
     
     init(scene: GameScene) {
         self.scene = scene
     }
     
-    //1
+  
     func initGame() {
         //starting player position
         scene.playerPositions.append((10, 10))
         scene.playerPositions.append((10, 11))
         scene.playerPositions.append((10, 12))
         renderChange()
+        generateNewPoint()
     }
-    //2
+    private func generateNewPoint() {
+        var randomX = CGFloat(arc4random_uniform(19))
+        var randomY = CGFloat(arc4random_uniform(39))
+        while contains(a: scene.playerPositions, v: (Int(randomX), Int(randomY))) {
+            randomX = CGFloat(arc4random_uniform(19))
+            randomY = CGFloat(arc4random_uniform(39))
+        }
+        scene.scorePos = CGPoint(x: randomX, y: randomY)
+    }
+   
     func renderChange() {
         for (node, x, y) in scene.gameArray {
             if contains(a: scene.playerPositions, v: (x,y)) {
                 node.fillColor = SKColor.cyan
             } else {
                 node.fillColor = SKColor.clear
+                if scene.scorePos != nil {
+                    if Int((scene.scorePos?.x)!) == y && Int((scene.scorePos?.y)!) == x {
+                        node.fillColor = SKColor.red
+                    }
+                }
             }
         }
+        
     }
     //3
     func contains(a:[(Int, Int)], v:(Int,Int)) -> Bool {
@@ -53,6 +70,21 @@ class GameManager {
                 nextTime = time + timeExtension
                 //print(time)
                 updatePlayerPosition()
+                checkForScore()
+            }
+        }
+    }
+    private func checkForScore() {
+        if scene.scorePos != nil {
+            let x = scene.playerPositions[0].0
+            let y = scene.playerPositions[0].1
+            if Int((scene.scorePos?.x)!) == y && Int((scene.scorePos?.y)!) == x {
+                currentScore += 1
+                scene.currentScore.text = "Score: \(currentScore)"
+                generateNewPoint()
+                scene.playerPositions.append(scene.playerPositions.last!)
+                scene.playerPositions.append(scene.playerPositions.last!)
+                scene.playerPositions.append(scene.playerPositions.last!)
             }
         }
     }
